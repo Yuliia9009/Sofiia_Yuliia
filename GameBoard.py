@@ -1,3 +1,6 @@
+from random import random
+
+
 class GameBoard:
     def __init__(self, rows=20, cols=20):
         self.rows = rows
@@ -7,7 +10,7 @@ class GameBoard:
         self.enemy_positions = {}
         self.treasure_positions = {}
         self.final_treasure_position = None
-        self.player_inventory = []  # Initialize the player's inventory as an empty list
+        self.sleeping_darts = 0
         self.init_map()
         self.insert_characters()
 
@@ -35,13 +38,15 @@ class GameBoard:
         self.player_position = [5, 5]
         self.game_map[5][5] = 'P'  # Player
 
-        enemy_positions = [(2, 7)]  # Add more tuples as needed
+        enemy_positions = [(2, 7), (2, 18), (14, 14), (17, 2)]  # Add more tuples as needed
         for pos in enemy_positions:
             self.enemy_positions[pos] = 'E'
             self.game_map[pos[0]][pos[1]] = 'E'
 
-        self.treasure_positions[(3, 3)] = 'T'
-        self.game_map[3][3] = 'T'  # Treasure
+        treasure_positions = [(3, 3), (8, 4), (17, 17)]
+        for pos in treasure_positions:
+            self.treasure_positions[pos] = 'T'
+            self.game_map[pos[0]][pos[1]] = 'T'
 
     def move_character(self, direction):
         movements = {
@@ -62,22 +67,36 @@ class GameBoard:
             print("Move not allowed.")
 
     def is_valid_move(self, position):
-        return 0 <= position[0] < self.rows and 0 <= position[1] < self.cols and self.game_map[position[0]][
-            position[1]] != 'X'
+        return (0 <= position[0] < self.rows 
+                and 0 <= position[1] < self.cols 
+                and self.game_map[position[0]][position[1]] != 'X')
 
     def move_enemy_towards_player(self):
         for enemy_pos in list(self.enemy_positions.keys()):
             new_enemy_position = list(enemy_pos)
 
-            if self.player_position[1] > enemy_pos[1]:
-                new_enemy_position[1] += 1
-            elif self.player_position[1] < enemy_pos[1]:
-                new_enemy_position[1] -= 1
-            elif self.player_position[0] > enemy_pos[0]:
-                new_enemy_position[0] += 1
-            elif self.player_position[0] < enemy_pos[0]:
-                new_enemy_position[0] -= 1
-
+            if random() < 0.3:
+                if self.player_position[1] > enemy_pos[1]:
+                    new_enemy_position[1] += 1
+                elif self.player_position[1] < enemy_pos[1]:
+                    new_enemy_position[1] -= 1
+            elif random() < 0.6:
+                if self.player_position[0] > enemy_pos[0]:
+                    new_enemy_position[0] += 1
+                elif self.player_position[0] < enemy_pos[0]:
+                    new_enemy_position[0] -= 1
+            else:
+                if self.player_position[1] > enemy_pos[1]:
+                    new_enemy_position[1] += 1
+                elif self.player_position[1] < enemy_pos[1]:
+                    new_enemy_position[1] -= 1
+                if self.player_position[0] > enemy_pos[0]:
+                    new_enemy_position[0] += 1
+                elif self.player_position[0] < enemy_pos[0]:
+                    new_enemy_position[0] -= 1
+            if self.game_map[new_enemy_position[0]][new_enemy_position[1]] == 'E':
+                continue
+                
             if self.is_valid_move(new_enemy_position):
                 self.game_map[enemy_pos[0]][enemy_pos[1]] = '.'
                 del self.enemy_positions[enemy_pos]
@@ -110,6 +129,7 @@ class GameBoard:
             visual_map[enemy_pos[0]][enemy_pos[1]] = tile_symbols["enemy"]
         for treasure_pos in self.treasure_positions:
             visual_map[treasure_pos[0]][treasure_pos[1]] = tile_symbols["treasure"]
+
         if self.final_treasure_position:
             visual_map[self.final_treasure_position[0]][self.final_treasure_position[1]] = tile_symbols["chest"]
 
@@ -119,22 +139,22 @@ class GameBoard:
             print("".join(row))
 
     def on_treasure_found(self):
-        self.player_inventory.append("sleeping dart")
-        print("You obtained a sleeping dart!")
-        # Remove the treasure and trigger any additional events, such as spawning more enemies
+        print("Treasure found!")
+        self.sleeping_darts += 1
+        print("You obtained a sleeping dart! Total darts:", self.sleeping_darts)
         del self.treasure_positions[tuple(self.player_position)]
         print("Press enter to continue...")
         input()
 
     def on_enemy_collision(self):
         print("You've encountered an enemy!")
-        if "sleeping dart" in self.player_inventory:
-            # Use the sleeping dart to avoid the confrontation
+        if self.sleeping_darts > 0:
+            # Use a sleeping dart to avoid the confrontation
             enemy_pos = tuple(self.player_position)
             if enemy_pos in self.enemy_positions:
-                self.remove_enemy(enemy_pos)
-                self.player_inventory.remove("sleeping dart")
-                print("You used a sleeping dart to escape the enemy!")
+                del self.enemy_positions[enemy_pos]
+                self.sleeping_darts -= 1  # Use up one sleeping dart
+                print("You used a sleeping dart to escape the enemy! Darts left:", self.sleeping_darts)
         else:
             self.confront_enemy()
 
