@@ -26,8 +26,7 @@ def get_shuffled_note_part2():
 
 def compose_sentence(note_part1, note_part2):
     print("Составьте предложение из двух частей записки:")
-    print("Первая часть записки:", note_part1)
-    print("Вторая часть записки:", note_part2)
+    print("Две части записки:", note_part1, note_part2)
     user_sentence = input("Введите свое предложение: ")
     return user_sentence
 
@@ -45,10 +44,10 @@ def two_parts():
 
     # Проверяем правильность составленного предложения
     if composed_sentence.lower() == correct_sentence.lower():
-        print("Пиратский призрак: Ты справился! Теперь ты знаешь какую оценку мы хотим.")
+        print("Пиратский призрак: Вы справились! У Вас есть 12 кристаллов, как Вы ими воспользуетесь.....?")
         return True
     else:
-        print("Пиратский призрак: Не волнуйся, ты сможешь это разгадать!")
+        print("Пиратский призрак: Не волнуйтесь, Вы сможете это разгадать!")
         return False
 
 if __name__ == "__main__":
