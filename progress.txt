@@ -1,2 +1,2 @@
-2
-4
+level: 0
+lives: 0
