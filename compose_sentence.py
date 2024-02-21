@@ -25,7 +25,7 @@ def get_shuffled_note_part2():
         return ' '.join(shuffled_words)
 
 def compose_sentence(note_part1, note_part2):
-    print("Составьте предложение из двух частей записки:")
+    print("Составьте предложение из двух частей записки(перемешаны буквы в каждом слове):")
     print("Две части записки:", note_part1, note_part2)
     user_sentence = input("Введите свое предложение: ")
     return user_sentence
