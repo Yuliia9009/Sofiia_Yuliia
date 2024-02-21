@@ -10,7 +10,8 @@ def read_riddles(filename):
     return riddles_data
 
 def guess_riddle(riddles):
-    print("Пиратский призрак: - тебе будет загадано 2 загадки, за каждую отгаданную загадку ты получишь 3 жизни.")
+    print("Добро пожаловать в игру 'Виселица'")
+    print("Пиратский призрак: - Вам будет загадано загадку, если отгадаешь, то Вы получишь 3 жизни.")
     riddle, answer = random.choice(list(riddles.items()))
     answer_without_spaces = answer.replace(" ", "")
     guessed_letters = ["_"] * len(answer_without_spaces)  # Загадываемое слово в виде списка букв с подчеркиваниями
@@ -41,7 +42,8 @@ def guess_riddle(riddles):
                 if letter.lower() == guess:
                     guessed_letters[i] = letter  # Заменяем подчеркивание на угаданную букву
             if "_" not in guessed_letters:
-                print("Поздравляем! Вы отгадали слово:", answer)
+                print("Пиратский Призрак: - поздравляю! Вы отгадали слово:", answer)
+                print("Я даю Вам как и обещал 3 жизни.")
                 return True
         else:
             print("Такой буквы нет в слове.")
@@ -49,7 +51,7 @@ def guess_riddle(riddles):
 
             if failed_attempts >= 6:
                 print("У вас закончились попытки. Вы проиграли.")
-                print_hangman(failed_attempts)  # Отображение полностью повешенного после шестой неверной попытки
+                print_hangman(failed_attempts)
                 print("Загаданное слово было:", answer)
                 return False
 
