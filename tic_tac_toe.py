@@ -40,6 +40,7 @@ def check_winner(board):
 
 def tic_tac_toe():
     print("Добро пожаловать в игру 'Крестики-нолики'!")
+    print_rules("rules.txt")  # Печать правил игры
     board = [[" " for _ in range(3)] for _ in range(3)]  # Инициализация игрового поля
     current_player = "X"  # Игрок, который делает текущий ход
     winner = None  # Победитель
@@ -50,8 +51,8 @@ def tic_tac_toe():
         print_board(board)  # Выводим игровое поле на экран
         if current_player == "X":  # Ход пользователя
             try:
-                row = int(input(f"Игрок {current_player}, выберите строку (1-3): ")) - 1  # Строка для хода
-                col = int(input(f"Игрок {current_player}, выберите столбец (1-3): ")) - 1  # Столбец для хода
+                row = int(input(f"Игрок {current_player}, выберите строку (1-3): ")) - 1
+                col = int(input(f"Игрок {current_player}, выберите столбец (1-3): ")) - 1
             except ValueError:
                 print("Неверный ввод! Попробуйте еще раз.")
                 continue
@@ -59,8 +60,10 @@ def tic_tac_toe():
                 board[row][col] = current_player  # Ставим символ текущего игрока в выбранную ячейку
                 if check_winner(board):  # Проверяем, есть ли победитель
                     winner = current_player  # Если есть, устанавливаем победителя
+                    print(f"Игрок {winner} выиграл!")
                 elif check_draw(board):  # Проверяем, есть ли ничья
                     winner = "Draw"  # Если есть, объявляем ничью
+                    print("Ничья!")
                 else:
                     current_player = "O"  # Меняем игрока на компьютера
             else:
