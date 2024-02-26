@@ -13,6 +13,10 @@ class GameBoard:
         self.sleeping_darts = 0
         self.init_map()
         self.insert_characters()
+        self.final_treasure_found = False
+
+    def is_condition_to_start_level_2_met(self):
+        return self.final_treasure_found
 
     def check_for_events(self):
         # Check if player found a treasure
@@ -67,8 +71,8 @@ class GameBoard:
             print("Move not allowed.")
 
     def is_valid_move(self, position):
-        return (0 <= position[0] < self.rows 
-                and 0 <= position[1] < self.cols 
+        return (0 <= position[0] < self.rows
+                and 0 <= position[1] < self.cols
                 and self.game_map[position[0]][position[1]] != 'X')
 
     def move_enemy_towards_player(self):
@@ -96,7 +100,7 @@ class GameBoard:
                     new_enemy_position[0] -= 1
             if self.game_map[new_enemy_position[0]][new_enemy_position[1]] == 'E':
                 continue
-                
+
             if self.is_valid_move(new_enemy_position):
                 self.game_map[enemy_pos[0]][enemy_pos[1]] = '.'
                 del self.enemy_positions[enemy_pos]
@@ -152,7 +156,7 @@ class GameBoard:
             # Use a sleeping dart to avoid the confrontation
             enemy_pos = tuple(self.player_position)
             if enemy_pos in self.enemy_positions:
-                del self.enemy_positions[enemy_pos]
+                self.remove_enemy(enemy_pos)
                 self.sleeping_darts -= 1  # Use up one sleeping dart
                 print("You used a sleeping dart to escape the enemy! Darts left:", self.sleeping_darts)
         else:
@@ -194,9 +198,9 @@ class GameBoard:
         crystals = 100  # Example amount
         note = "The journey is the treasure."
         self.write_treasure_contents_to_file(crystals, note)
+        self.final_treasure_found = True
         print("You've found the final treasure containing crystals and a note!")
         print("well done!")
-        exit()
 
 
     def write_treasure_contents_to_file(self, crystals, note):
