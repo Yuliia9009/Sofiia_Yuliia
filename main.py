@@ -6,6 +6,7 @@ import compose_sentence
 import riddles
 from riddles import riddles_data
 import tic_tac_toe
+from GameBoard import GameBoard
 FILENAME_PROGRESS = "progress.txt"
 
 # Функция загрузки прогресса игры
@@ -144,6 +145,28 @@ def play_compose_sentence(level, lives, current_level):
     return 3
 
 # Основная функция уровня
+def start_level_1():
+    game_board = GameBoard()
+
+    # Game loop
+    game_board.print_game_map()
+    while True:
+        direction = input("Move (up, down, left, right): ").lower()
+        if direction in ["up", "down", "left", "right"]:
+            game_board.move_character(direction)
+            game_board.move_enemy_towards_player()
+            game_board.print_game_map()
+            game_board.check_for_events()
+
+            # Add conditions for transitioning to level 2
+            if game_board.is_condition_to_start_level_2_met():  # Replace this with your condition
+                print("Congratulations! You've completed level 1. Moving to level 2...")
+                start_level2()  # Call start_level2() to transition to level 2
+                break  # Exit the loop after moving to level 2
+        else:
+            print("Invalid direction. Please choose 'up', 'down', 'left', or 'right'.")
+
+# Основная функция уровня
 def start_level2():
     print("*" * 130)
     text = """
@@ -218,4 +241,4 @@ def start_level2():
             break  # Если пользователь выбирает выход из игры, завершаем цикл
 
 if __name__ == "__main__":
-    start_level2()
+    start_level_1()
